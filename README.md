@@ -25,4 +25,8 @@ Now, you can run the bot
 
 `python main.py`
 
+### Any questions or need help? Come hop on by to our Telegram Group!
+
+[Otakatsu Chat](https://t.me/otakatsu_chat)
+
 
