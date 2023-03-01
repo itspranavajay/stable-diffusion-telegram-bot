@@ -35,35 +35,35 @@ def draw(client, message):
 
     K = message.reply_text("Please Wait 10-15 Second")
 
-    payload = {
-        "prompt": msg,
-        "steps": 50,
-        "batch_size": 1,
-        "n_iter": 1,
-        "cfg scale": 7,
-        "width": 360,
-        "height": 640,
-       # "enable_hr': false,
-       # "denoising_strength": 0,
-       # "firstphase_width": 0,
-       # "firstphase_height": 0,
-       # "styles": [
-       #     "string"
-       # ],
-        "seed": -1,
-        "subseed": -1,
-        "subseed_strength": 0,
-        "seed_resize_from_h": -1,
-        "seed_resize_from_w": -1,
-        "restore_faces": True,
-        "tiling": False,
-        "negative prompt": "Out of frame, out of focus, morphed",
-        "s_churn": 0,
-        "s_tmax": 0,
-        "s_tmin": 0,
-        "s_noise": 1,
-        "sampler_index": "DPM++ 2M Karras"
-}
+        payload = {
+            "prompt": msg,
+            "steps": 50,
+            "batch_size": 1,
+            "n_iter": 1,
+            "cfg scale": 7,
+            "width": 360,
+            "height": 640,
+           # "enable_hr': false,
+           # "denoising_strength": 0,
+           # "firstphase_width": 0,
+           # "firstphase_height": 0,
+           # "styles": [
+           #     "string"
+           # ],
+            "seed": -1,
+            "subseed": -1,
+            "subseed_strength": 0,
+            "seed_resize_from_h": -1,
+            "seed_resize_from_w": -1,
+            "restore_faces": True,
+            "tiling": False,
+            "negative prompt": "Out of frame, out of focus, morphed",
+            "s_churn": 0,
+            "s_tmax": 0,
+            "s_tmin": 0,
+            "s_noise": 1,
+            "sampler_index": "DPM++ 2M Karras"
+    }
 
     r = requests.post(url=f'{SD_URL}/sdapi/v1/txt2img', json=payload).json()
 
@@ -84,7 +84,7 @@ def draw(client, message):
     for i in r['images']:
         image = Image.open(io.BytesIO(base64.b64decode(i.split(",", 1)[0])))
 
-        png_payload = {"image": "data:image/png;base64," + i}
+        png_payload = {"image": f"data:image/png;base64,{i}"}
         response2 = requests.post(url=f'{SD_URL}/sdapi/v1/png-info',
                                   json=png_payload)
 
