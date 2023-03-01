@@ -37,36 +37,33 @@ def draw(client, message):
 
     payload = {
         "prompt": msg,
-        "steps": 35
-        "enable _hr': false,
-        "denoising_strength": 0,
-        "firstphase_width": 0,
-        "firstphase_height": 0,
-        "styles": [
-            "string"
-        ],
+        "steps": 50,
+        "batch_size": 1,
+        "n_iter": 1,
+        "cfg scale": 7,
+        "width": 360,
+        "height": 640,
+       # "enable_hr': false,
+       # "denoising_strength": 0,
+       # "firstphase_width": 0,
+       # "firstphase_height": 0,
+       # "styles": [
+       #     "string"
+       # ],
         "seed": -1,
         "subseed": -1,
         "subseed_strength": 0,
-        "seed_resize_from_h: -1,
+        "seed_resize_from_h": -1,
         "seed_resize_from_w": -1,
-        "batch_size": 1
-        "n_iter": 1,
-        "steps": 50,
-        "cfg scale": 7
-        "width": 512,
-        "height": 512,
-        "restore_faces": false,
-        "tiling": false,
-        "negative prompt": "string",
-        "eta": O,
+        "restore_faces": True,
+        "tiling": False,
+        "negative prompt": "Out of frame, out of focus, morphed",
         "s_churn": 0,
         "s_tmax": 0,
         "s_tmin": 0,
         "s_noise": 1,
-        "sampler_ index": "Euler"
-
-    }
+        "sampler_index": "DPM++ 2M Karras"
+}
 
     r = requests.post(url=f'{SD_URL}/sdapi/v1/txt2img', json=payload).json()
 
@@ -98,7 +95,7 @@ def draw(client, message):
         message.reply_photo(
             photo=f"{word}.png",
             caption=
-            f"Prompt - **{msg}**\n **[{message.from_user.first_name}-Kun](tg://user?id={message.from_user.id})**\n"
+            f"Prompt - **{msg}**\n **[{message.from_user.first_name}-Kun](tg://user?id={message.from_user.id})**\n Join @WaifuAiSupport"
         )
         os.remove(f"{word}.png")
         K.delete()
@@ -111,12 +108,13 @@ async def start(client, message):
     buttons = [[
         InlineKeyboardButton("Add to your group",
                              url="http://t.me/botname?startgroup=true"),
+        InlineKeyboardButton("Channel", url="https://t.me/otakatsu"),
+        InlineKeyboardButton("Support", url="https://t.me/otakatsu_chat")
     ]]
     await message.reply_photo(
         photo=Photo,
         caption=
-        f"Hello! I'm botname Ai and I can make an anime-styled picture!\n\n/draw text to anime image",
+        f"Hello! I'm botname Ai and I can make an anime-styled picture!\n\n/generate - Reply to Image\n/draw text to anime image\n\nPowered by @Otakatsu",
         reply_markup=InlineKeyboardMarkup(buttons))
-
 
 bot.run()
