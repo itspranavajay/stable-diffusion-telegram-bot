@@ -5,13 +5,18 @@ import json
 import requests
 import io
 import random
+from dotenv import load_dotenv
 from PIL import Image, PngImagePlugin
 import base64
 
-API_ID = os.environ.get("API_ID", None) 
-API_HASH = os.environ.get("API_HASH", None) 
-TOKEN = os.environ.get("TOKEN", None) 
-SD_URL = os.environ.get("TOKEN", None) 
+
+load_dotenv()
+API_ID = os.getenv("API_ID")
+API_HASH = os.getenv("API_HASH")
+TOKEN = os.getenv("TOKEN")
+SD_URL = os.getenv("SD_URL")
+
+
 
 bot = Client(
     "stable",
@@ -20,7 +25,7 @@ bot = Client(
     bot_token=TOKEN
 )
 
-@app.on_message(filters.command(["draw"]))
+@bot.on_message(filters.command(["draw"]))
 def draw(client, message):
     msgs = message.text.split(' ', 1)
     if len(msgs) == 1:
@@ -30,7 +35,35 @@ def draw(client, message):
 
     K = message.reply_text("Please Wait 10-15 Second")
 
-    payload = {"prompt": msg}
+        payload = {
+            "prompt": msg,
+            "steps": 50,
+            "batch_size": 1,
+            "n_iter": 1,
+            "cfg scale": 7,
+            "width": 360,
+            "height": 640,
+           # "enable_hr': false,
+           # "denoising_strength": 0,
+           # "firstphase_width": 0,
+           # "firstphase_height": 0,
+           # "styles": [
+           #     "string"
+           # ],
+            "seed": -1,
+            "subseed": -1,
+            "subseed_strength": 0,
+            "seed_resize_from_h": -1,
+            "seed_resize_from_w": -1,
+            "restore_faces": True,
+            "tiling": False,
+            "negative prompt": "Out of frame, out of focus, morphed",
+            "s_churn": 0,
+            "s_tmax": 0,
+            "s_tmin": 0,
+            "s_noise": 1,
+            "sampler_index": "DPM++ 2M Karras"
+    }
 
     r = requests.post(url=f'{SD_URL}/sdapi/v1/txt2img', json=payload).json()
 
@@ -51,8 +84,8 @@ def draw(client, message):
     for i in r['images']:
         image = Image.open(io.BytesIO(base64.b64decode(i.split(",", 1)[0])))
 
-        png_payload = {"image": "data:image/png;base64," + i}
-        response2 = requests.post(url=f'{url}/sdapi/v1/png-info',
+        png_payload = {"image": f"data:image/png;base64,{i}"}
+        response2 = requests.post(url=f'{SD_URL}/sdapi/v1/png-info',
                                   json=png_payload)
 
         pnginfo = PngImagePlugin.PngInfo()
@@ -68,7 +101,7 @@ def draw(client, message):
         K.delete()
 
 
-@app.on_message(filters.command(["start"], prefixes=["/", "!"]))
+@bot.on_message(filters.command(["start"], prefixes=["/", "!"]))
 async def start(client, message):
     Photo = "https://media.discordapp.net/attachments/1028156834944655380/1062018608022171788/3aac7aaf-0065-40aa-9e4d-430c717b3d87.jpg"
 
@@ -84,5 +117,4 @@ async def start(client, message):
         f"Hello! I'm botname Ai and I can make an anime-styled picture!\n\n/generate - Reply to Image\n/draw text to anime image\n\nPowered by @Otakatsu",
         reply_markup=InlineKeyboardMarkup(buttons))
 
-
-app.run()
+bot.run()
