@@ -11,9 +11,9 @@ import base64
 API_ID = os.environ.get("API_ID", None) 
 API_HASH = os.environ.get("API_HASH", None) 
 TOKEN = os.environ.get("TOKEN", None) 
-SD_URL = os.environ.get("TOKEN", None) 
+SD_URL = os.environ.get("SDURl", None) 
 
-bot = Client(
+app = Client(
     "stable",
     api_id=API_ID,
     api_hash=API_HASH,
